@@ -65,7 +65,7 @@ p1 <- basic_measurements %>%
 ggsave( plot = p1, height=10, width=10, filename = "Heart basic measurements.png", units = "in",dpi = 100 )
 
 
-sink( 'boundary integrity test.txt' ) #, append = TRUE )
+sink( 'heart basic measurements.txt' ) #, append = TRUE )
 for (cat in levels(basic_measurements$Measurement)) {
   filtered_df <- basic_measurements[basic_measurements$Measurement == cat, ]
   
