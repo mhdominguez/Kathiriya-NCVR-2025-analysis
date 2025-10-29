@@ -1,13 +1,12 @@
-#install.packages('readODS')
-#font_import()
+
 library(ggplot2)
 library(readODS)
 library(tidyverse)
 library(viridis)
 library(dplyr)
 library(extrafont)
-library(ggridges)
 loadfonts()
+
 setwd("Figure Data/")
 
 #==============
@@ -438,6 +437,35 @@ Ctl <- zsG[which(tdT$Genotype=="Control"),]
 wilcox.test(Mut$Score,Ctl$Score)
 
 
+#==============
+#average orientation score histogram analysis
+#==============
+library(circular)
+avg_histograms_tdT <-read_ods(path="ctrl mut histogram.ods", sheet=1, formula_as_formula=FALSE, verbose=FALSE)
+angles <- (avg_histograms_tdT$Direction + 180) * pi/180
+
+C <- avg_histograms_tdT$`Tbx5-CreERT2/+`
+M <- avg_histograms_tdT$`Tbx5-CreERT2/fl`
+
+# scale histograms into an angle vector - count each ROI as functionally one histogram bin distributed across all angles, there are 98 control and 74 mutant ROIs
+newC <- circular(rep(angles, times = 98 * C/max(C)), units = "radians", modulo = "pi")
+newM <- circular(rep(angles, times = 74 * M/max(M)), units = "radians", modulo = "pi")
+
+print("tdT")
+watson.two.test(newC,newM)
+
+avg_histograms_tdT <-read_ods(path="ctrl mut histogram.ods", sheet=2, formula_as_formula=FALSE, verbose=FALSE)
+angles <- (avg_histograms_tdT$Direction + 180) * pi/180
+
+C <- avg_histograms_tdT$`Tbx5-CreERT2/+`
+M <- avg_histograms_tdT$`Tbx5-CreERT2/fl`
+
+# scale histograms into an angle vector - count each ROI as functionally one histogram bin distributed across all angles, there are 98 control and 74 mutant ROIs
+newC <- circular(rep(angles, times = 98 * C/max(C)), units = "radians", modulo = "pi")
+newM <- circular(rep(angles, times = 74 * M/max(M)), units = "radians", modulo = "pi")
+
+print("zsG")
+watson.two.test(newC,newM)
 
 
 #==============
